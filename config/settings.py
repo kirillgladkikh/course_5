@@ -54,12 +54,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
-
-
 	# СЮДА ВВОДИ ИМЕНА СВОИХ ПРИЛОЖЕНИЙ
-    # "rest_framework",  # ЕСЛИ НУЖНО (ТОЛЬКО ДЛЯ DRF!)
-    # "users", # ВАЖНО: ПРИНЯТО ИМЕННО users!, а не user.
+    "rest_framework",  # ЕСЛИ НУЖНО (ТОЛЬКО ДЛЯ DRF!)
+    "users", # ВАЖНО: ПРИНЯТО ИМЕННО users!, а не user.
     # "catalog",
     # "blog",
 
