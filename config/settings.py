@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 	# СЮДА ВВОДИ ИМЕНА СВОИХ ПРИЛОЖЕНИЙ
     "rest_framework",  # ЕСЛИ НУЖНО (ТОЛЬКО ДЛЯ DRF!)
+
     "users", # ВАЖНО: ПРИНЯТО ИМЕННО users!, а не user.
     # "catalog",
     # "blog",
@@ -159,7 +160,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # ВАЖНО:
 # НАДО СНЯТЬ КОММЕНТ НА AUTH_USER_MODEL, ЕСЛИ НАДО ДЕЛАТЬ НЕ СТАНДАРТНУЮ АУТЕНТИФИКАЦИЮ
 # НАПРИМЕР: КОГДА ХОЧЕШЬ ЧЕРЕЗ ЭЛ.ПОЧТУ
-# AUTH_USER_MODEL = "users.User"
+AUTH_USER_MODEL = "users.User"
 
 # ВАЖНО:
 # СНЯТЬ КОММЕНТЫ НИЖЕ ПО МЕРЕ НАПОЛНЕНИЯ ПРОЕКТА ШАГ ЗА ШАГОМ !!!
