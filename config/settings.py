@@ -1,6 +1,7 @@
 import os
-from dotenv import load_dotenv
 from pathlib import Path
+
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -31,19 +32,18 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-	# ВАЖНО: ЕСЛИ МЕНЯЕШЬ АДМИНКУ/АВТОРИЗАЦИЮ, ТО !!!
-	# - СВОИ ПРИЛОЖЕНИЯ admin/auth СТАВИШЬ === В НАЧАЛО ===
-	# (т.е. = ПЕРЕД = "django.contrib.admin"/"django.contrib.auth")
+    # ВАЖНО: ЕСЛИ МЕНЯЕШЬ АДМИНКУ/АВТОРИЗАЦИЮ, ТО !!!
+    # - СВОИ ПРИЛОЖЕНИЯ admin/auth СТАВИШЬ === В НАЧАЛО ===
+    # (т.е. = ПЕРЕД = "django.contrib.admin"/"django.contrib.auth")
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-	# СЮДА ВВОДИ ИМЕНА СВОИХ ПРИЛОЖЕНИЙ
+    # СЮДА ВВОДИ ИМЕНА СВОИХ ПРИЛОЖЕНИЙ
     "rest_framework",  # ЕСЛИ НУЖНО (ТОЛЬКО ДЛЯ DRF!)
-
-    "users", # ВАЖНО: ПРИНЯТО ИМЕННО users!, а не user.
+    "users",  # ВАЖНО: ПРИНЯТО ИМЕННО users!, а не user.
     "habits",
 ]
 
@@ -157,7 +157,7 @@ REST_FRAMEWORK = {
         # "rest_framework.permissions.IsAuthenticated",
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-    'PAGE_SIZE': 10,
+    "PAGE_SIZE": 10,
 }
 
 # # Настройки срока действия токенов

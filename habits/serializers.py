@@ -1,7 +1,9 @@
 from rest_framework import serializers
-from .models import Habit
+
+from habits.models import Habit
+
 
 class HabitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Habit
-        fields = '__all__'  # или укажите конкретные поля: ['id', 'name', 'price']
+        fields = "__all__"  # или укажите конкретные поля: ['id', 'name', 'price']
