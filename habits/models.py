@@ -1,4 +1,5 @@
 from datetime import timedelta
+from django.core.exceptions import ValidationError
 
 from django.core.validators import MaxValueValidator
 from django.db.models import (CASCADE, SET_NULL, BooleanField, CharField, DurationField, ForeignKey, Model,
@@ -76,3 +77,17 @@ class Habit(Model):
 
     def __str__(self):
         return self.habit_name
+
+    # Базовые ограничения целостности данных прописываем в clean
+    # Кросс‑полевую валидацию пропишем в habits/serializers.py
+    def clean(self):
+        errors = {}  # Будем собирать все ошибки и только потом выводить их
+
+        if self.time_to_action and self.time_to_action > timedelta(seconds=120):
+            errors['time_to_action'] = 'Время выполнения не может превышать 120 секунд.'
+
+        if not (1 <= self.period <= 7):
+            errors['period'] = 'Период должен быть от 1 до 7 дней.'
+
+        if errors:
+            raise ValidationError(errors)
