@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     # СЮДА ВВОДИ ИМЕНА СВОИХ ПРИЛОЖЕНИЙ
     "rest_framework",  # ЕСЛИ НУЖНО (ТОЛЬКО ДЛЯ DRF!)
     'rest_framework_simplejwt',
+    'corsheaders',
     "users",  # ВАЖНО: ПРИНЯТО ИМЕННО users!, а не user.
     "habits",
 ]
@@ -56,6 +57,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # corsheaders
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -184,6 +187,17 @@ CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_TRACK_STARTED = True
 # Максимальное время на выполнение задачи
 CELERY_TASK_TIME_LIMIT = 30 * 60
+
+# Настройки для CORS
+CORS_ALLOWED_ORIGINS = [
+    '<http://localhost:8000>',  # Замените на адрес вашего фронтенд-сервера
+    "https://read-and-write.example.com",
+]
+CSRF_TRUSTED_ORIGINS = [
+    "https://read-and-write.example.com", #  Замените на адрес вашего фронтенд-сервера
+    # и добавьте адрес бэкенд-сервера
+]
+CORS_ALLOW_ALL_ORIGINS = False
 
 # ВАЖНО:
 # СНЯТЬ КОММЕНТЫ НИЖЕ ПО МЕРЕ НАПОЛНЕНИЯ ПРОЕКТА ШАГ ЗА ШАГОМ !!!
