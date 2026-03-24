@@ -1,5 +1,12 @@
 from rest_framework import serializers
 from habits.models import Habit
+from habits.validators import (
+    validate_no_reward_and_related_habit,
+    validate_time_to_action_max_120_seconds,
+    validate_related_habit_is_pleasant,
+    validate_pleasant_habit_no_reward_or_related,
+    validate_period_between_1_and_7_days
+)
 
 
 class HabitSerializer(serializers.ModelSerializer):
@@ -19,38 +26,13 @@ class HabitSerializer(serializers.ModelSerializer):
             for field in sensitive_fields:
                 if field in data:
                     data[field] = None
-
         return data
 
-    # Базовые ограничения целостности данных прописали в методе clean в habits/models.py
-    # Кросс‑полевую валидацию прописали в сериализаторе
+    # Применяем все валидаторы последовательно
     def validate(self, data):
-        is_pleasant = data.get('is_pleasant', False)
-        reward = data.get('reward')
-        related_habit = data.get('related_habit')
-
-        errors = {}  # Будем собирать все ошибки и только потом выводить их
-
-        # 1. Приятная привычка не может иметь вознаграждения или связанной привычки
-        if is_pleasant and (reward or related_habit):
-            errors['is_pleasant'] = (
-                "У приятной привычки не может быть вознаграждения или связанной привычки."
-            )
-
-        # 2. Нельзя одновременно указать вознаграждение и связанную привычку
-        if reward and related_habit:
-            errors['reward'] = (
-                "Нельзя одновременно указать вознаграждение и связанную привычку."
-            )
-
-        # 3. Связанная привычка должна быть приятной
-        if related_habit and not related_habit.is_pleasant:
-            errors['related_habit'] = (
-                "Связанная привычка должна иметь признак приятной привычки."
-            )
-
-        # Если есть ошибки, выбрасываем исключение с полным списком
-        if errors:
-            raise serializers.ValidationError(errors)
-
+        data = validate_no_reward_and_related_habit(data)
+        data = validate_time_to_action_max_120_seconds(data)
+        data = validate_related_habit_is_pleasant(data)
+        data = validate_pleasant_habit_no_reward_or_related(data)
+        data = validate_period_between_1_and_7_days(data)
         return data
