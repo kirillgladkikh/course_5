@@ -7,6 +7,21 @@ class HabitSerializer(serializers.ModelSerializer):
         model = Habit
         fields = '__all__'
 
+    # Фильтрация полей для публичных привычек
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        request = self.context.get('request')
+
+        # Если привычка не публичная и пользователь не владелец, скрываем чувствительные данные
+        if not instance.is_published and instance.owner != request.user:
+            # Скрываем поля, которые могут раскрыть личную информацию
+            sensitive_fields = ['reward', 'related_habit', 'owner']
+            for field in sensitive_fields:
+                if field in data:
+                    data[field] = None
+
+        return data
+
     # Базовые ограничения целостности данных прописали в методе clean в habits/models.py
     # Кросс‑полевую валидацию прописали в сериализаторе
     def validate(self, data):

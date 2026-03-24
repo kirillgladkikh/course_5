@@ -7,9 +7,7 @@ class User(AbstractUser):
     email = EmailField(unique=True, verbose_name="Email")
     phone = CharField(max_length=35, verbose_name="Телефон", blank=True, null=True, help_text="Введите номер телефона")
     country = CharField(max_length=50, verbose_name="Страна", blank=True, null=True, help_text="Введите страну")
-    chat_id = CharField(max_length=255, verbose_name="chat_id", blank=True, null=True, help_text="Введите ТГ ID")
-
-    token = CharField(max_length=100, verbose_name="Token", blank=True, null=True)
+    tg_id = CharField(max_length=255, verbose_name="Тelegram ID", blank=True, null=True, help_text="Введите ТГ ID")
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []

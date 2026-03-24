@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # СЮДА ВВОДИ ИМЕНА СВОИХ ПРИЛОЖЕНИЙ
     "rest_framework",  # ЕСЛИ НУЖНО (ТОЛЬКО ДЛЯ DRF!)
+    'rest_framework_simplejwt',
     "users",  # ВАЖНО: ПРИНЯТО ИМЕННО users!, а не user.
     "habits",
 ]
@@ -149,22 +150,25 @@ AUTH_USER_MODEL = "users.User"
 # Настройки JWT-токенов
 REST_FRAMEWORK = {
     # "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
-    # "DEFAULT_AUTHENTICATION_CLASSES": [
-    #     "rest_framework_simplejwt.authentication.JWTAuthentication",
-    # ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.AllowAny",
-        # "rest_framework.permissions.IsAuthenticated",
+        # "rest_framework.permissions.AllowAny",
+        "rest_framework.permissions.IsAuthenticated",
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
 }
 
-# # Настройки срока действия токенов
-# SIMPLE_JWT = {
-#     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
-#     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-# }
+# Настройки JWT-токенов
+from datetime import timedelta
+
+# Настройки срока действия токенов
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+}
 
 # ВАЖНО:
 # СНЯТЬ КОММЕНТЫ НИЖЕ ПО МЕРЕ НАПОЛНЕНИЯ ПРОЕКТА ШАГ ЗА ШАГОМ !!!
