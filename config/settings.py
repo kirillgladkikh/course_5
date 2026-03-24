@@ -192,7 +192,7 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 
 # Настройки для CORS
 CORS_ALLOWED_ORIGINS = [
-    '<http://localhost:8000>',  # Замените на адрес вашего фронтенд-сервера
+    'http://localhost:8000',  # Замените на адрес вашего фронтенд-сервера
     "https://read-and-write.example.com",
 ]
 CSRF_TRUSTED_ORIGINS = [
