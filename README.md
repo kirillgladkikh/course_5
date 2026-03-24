@@ -64,6 +64,14 @@
 - Редактирование привычки.
 - Удаление привычки.
 
+#### ==> Сводка по подходам к формированию эндпоинтов
+- Эндпоинт		Подход			Класс/Функция		Файл
+- Регистрация		Generic View		UserRegistrationView	users/views.py
+- Авторизация		Generic View		TokenObtainPairView	users/urls.py
+- Обновление токена	Generic View		TokenRefreshView	users/urls.py
+- Привычки (CRUD)		ViewSet + Router	HabitViewSet		habits/views.py
+- Публичные привычки	Custom Action в ViewSet	@action в HabitViewSet	habits/views.py
+
 ### Интеграция
 - Для полноценной работы сервиса необходимо реализовать работу с отложенными задачами для напоминания о том, в какое время какие привычки необходимо выполнять.
 - Для этого потребуется интегрировать сервис с мессенджером Телеграм, который будет заниматься рассылкой уведомлений.
@@ -74,14 +82,6 @@
 ### Документация
 - Для реализации экранов силами фронтенд-разработчиков необходимо настроить вывод документации. 
 - При необходимости эндпоинты, на которые документация не будет сгенерирована автоматически, описать вручную.
-
-## Сводка по подходам к формированию эндпоинтов
-- Эндпоинт		Подход			Класс/Функция		Файл
-- Регистрация		Generic View		UserRegistrationView	users/views.py
-- Авторизация		Generic View		TokenObtainPairView	users/urls.py
-- Обновление токена	Generic View		TokenRefreshView	users/urls.py
-- Привычки (CRUD)		ViewSet + Router	HabitViewSet		habits/views.py
-- Публичные привычки	Custom Action в ViewSet	@action в HabitViewSet	habits/views.py
 
 ## Тесты
 - ... 
