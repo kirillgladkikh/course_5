@@ -1,5 +1,4 @@
 from datetime import timedelta
-from django.core.exceptions import ValidationError
 
 from django.core.validators import MaxValueValidator
 from django.db.models import (CASCADE, SET_NULL, BooleanField, CharField, DurationField, ForeignKey, Model,

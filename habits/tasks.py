@@ -1,11 +1,14 @@
 import logging
-from celery import shared_task
+
 import requests
+from celery import shared_task
 from django.conf import settings
-from .services import get_upcoming_reminders
+
 from .models import Habit
+from .services import get_upcoming_reminders
 
 logger = logging.getLogger(__name__)
+
 
 @shared_task
 def send_habit_reminder(habit_id):
@@ -42,6 +45,7 @@ def send_habit_reminder(habit_id):
         logger.error(f"Ошибка при отправке напоминания для привычки {habit_id}: {str(e)}")
         return f"Ошибка: {str(e)}"
 
+
 @shared_task
 def schedule_habit_reminders():
     """
@@ -53,26 +57,20 @@ def schedule_habit_reminders():
     # Получаем все предстоящие напоминания на 24 часа вперёд
     for habit, reminder_time in get_upcoming_reminders(hours_ahead=24):
         # Планируем отправку напоминания в точное время
-        send_habit_reminder.apply_async(
-            args=[habit.id],
-            eta=reminder_time
-        )
+        send_habit_reminder.apply_async(args=[habit.id], eta=reminder_time)
         sent_count += 1
         logger.info(f"Запланировано напоминание для {habit.habit_name} на {reminder_time}")
 
     logger.info(f"Всего запланировано напоминаний: {sent_count}")
     return f"Запланировано {sent_count} напоминаний"
 
+
 def send_telegram_message(chat_id, text):
     """
     Отправка сообщения через Telegram_Bot_API.
     """
     url = f"{settings.TELEGRAM_URL}{settings.TELEGRAM_TOKEN}/sendMessage"
-    payload = {
-        'chat_id': chat_id,
-        'text': text,
-        'parse_mode': 'HTML'
-    }
+    payload = {"chat_id": chat_id, "text": text, "parse_mode": "HTML"}
 
     try:
         response = requests.post(url, json=payload, timeout=10)

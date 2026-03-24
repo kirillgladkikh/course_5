@@ -43,9 +43,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # СЮДА ВВОДИ ИМЕНА НЕОБХОДИМЫХ ДЛЯ РАБОТЫ ПРОЕКТА ПРИЛОЖЕНИЙ
     "rest_framework",  # ЕСЛИ НУЖНО (ТОЛЬКО ДЛЯ DRF!)
-    'rest_framework_simplejwt',
-    'corsheaders',
-    'drf_yasg',
+    "rest_framework_simplejwt",
+    "corsheaders",
+    "drf_yasg",
     # СЮДА ВВОДИ ИМЕНА СВОИХ ПРИЛОЖЕНИЙ
     "users",  # ВАЖНО: ПРИНЯТО ИМЕННО users!, а не user.
     "habits",
@@ -60,7 +60,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # corsheaders
-    'corsheaders.middleware.CorsMiddleware'
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -192,11 +192,11 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 
 # Настройки для CORS
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8000',  # Замените на адрес вашего фронтенд-сервера
+    "http://localhost:8000",  # Замените на адрес вашего фронтенд-сервера
     "https://read-and-write.example.com",
 ]
 CSRF_TRUSTED_ORIGINS = [
-    "https://read-and-write.example.com", #  Замените на адрес вашего фронтенд-сервера
+    "https://read-and-write.example.com",  #  Замените на адрес вашего фронтенд-сервера
     # и добавьте адрес бэкенд-сервера
 ]
 CORS_ALLOW_ALL_ORIGINS = False
@@ -224,5 +224,8 @@ CACHE_ENABLED = True
 
 if CACHE_ENABLED:
     CACHES = {
-        "default": {"BACKEND": "django.core.cache.backends.redis.RedisCache", "LOCATION": "redis://localhost:6379/1",}
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": "redis://localhost:6379/1",
+        }
     }
