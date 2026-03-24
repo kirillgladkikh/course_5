@@ -41,10 +41,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # СЮДА ВВОДИ ИМЕНА СВОИХ ПРИЛОЖЕНИЙ
+    # СЮДА ВВОДИ ИМЕНА НЕОБХОДИМЫХ ДЛЯ РАБОТЫ ПРОЕКТА ПРИЛОЖЕНИЙ
     "rest_framework",  # ЕСЛИ НУЖНО (ТОЛЬКО ДЛЯ DRF!)
     'rest_framework_simplejwt',
     'corsheaders',
+    'drf_yasg',
+    # СЮДА ВВОДИ ИМЕНА СВОИХ ПРИЛОЖЕНИЙ
     "users",  # ВАЖНО: ПРИНЯТО ИМЕННО users!, а не user.
     "habits",
 ]
