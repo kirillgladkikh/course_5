@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+from datetime import timedelta
 
 load_dotenv()
 
@@ -15,7 +16,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 # ВАЖНО:
-# 1. АКТУАЛЬНЫЙ SECRET_KEY ДЛЯ ПРОЕКТА БЕРЕМ ИЗ СОЗДАННОГО ДЖАНГО settings.py КОМАНДОЙ "django-admin startproject config ."
+# 1. АКТУАЛЬНЫЙ SECRET_KEY ДЛЯ ПРОЕКТА БЕРЕМ ИЗ СОЗДАННОГО ДЖАНГО settings.py -->
+# --> КОМАНДОЙ "django-admin startproject config ."
 # 2. ВСТАВЛЯЕМ ЭТОТ АКТУАЛЬНЫЙ SECRET_KEY В ФАЙЛ .env !!!
 # ВАЖНО:
 # ЕСЛИ ЗАБЫЛ SECRET_KEY - ЕГО МОЖНО СОЗДАТЬ:
@@ -140,7 +142,8 @@ MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(
     BASE_DIR, "media"
 )  # классический и надёжный вариант для MEDIA_ROOT. Подходит для старых версий Python/Django.
-# MEDIA_ROOT = BASE_DIR / "media"  # современный и предпочтительный синтаксис (если проект использует pathlib). Эквивалентен os.path.join, но чище.
+# MEDIA_ROOT = BASE_DIR / "media"  # современный и предпочтительный синтаксис (если проект использует pathlib).
+# Эквивалентен os.path.join, но чище.
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -167,8 +170,6 @@ REST_FRAMEWORK = {
 }
 
 # Настройки JWT-токенов
-from datetime import timedelta
-
 # Настройки срока действия токенов
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
@@ -196,7 +197,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://read-and-write.example.com",
 ]
 CSRF_TRUSTED_ORIGINS = [
-    "https://read-and-write.example.com",  #  Замените на адрес вашего фронтенд-сервера
+    "https://read-and-write.example.com",  # Замените на адрес вашего фронтенд-сервера
     # и добавьте адрес бэкенд-сервера
 ]
 CORS_ALLOW_ALL_ORIGINS = False

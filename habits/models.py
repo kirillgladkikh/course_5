@@ -1,8 +1,17 @@
 from datetime import timedelta
 
 from django.core.validators import MaxValueValidator
-from django.db.models import (CASCADE, SET_NULL, BooleanField, CharField, DurationField, ForeignKey, Model,
-                              PositiveIntegerField, TimeField)
+from django.db.models import (
+    CASCADE,
+    SET_NULL,
+    BooleanField,
+    CharField,
+    DurationField,
+    ForeignKey,
+    Model,
+    PositiveIntegerField,
+    TimeField,
+)
 
 from config.settings import AUTH_USER_MODEL
 
@@ -37,7 +46,9 @@ class Habit(Model):
         null=True,
         blank=True,
         verbose_name="Связанная привычка",
-        help_text="Выберите привычку (не обязательно), которая будет триггером для этой (например, после «Чистка зубов» → «Медитация»)",
+        help_text=("Выберите привычку (не обязательно), которая будет триггером для этой "
+                   "(например, после «Чистка зубов» → «Медитация»)"
+                   ),
     )
     period = PositiveIntegerField(
         verbose_name="Период выполнения (в днях)",
@@ -47,7 +58,9 @@ class Habit(Model):
     reward = CharField(
         max_length=255,
         verbose_name="Вознаграждение",
-        help_text="Что вы получите за выполнение привычки (например, «Чашка кофе», «10 минут отдыха», «Эпизод сериала»)",
+        help_text=("Что вы получите за выполнение привычки (например, «Чашка кофе», «10 минут отдыха», "
+                   "«Эпизод сериала»)"
+                   ),
     )
     time_to_action = DurationField(
         default=timedelta(seconds=120),
