@@ -11,6 +11,8 @@ from habits.validators import (
 
 
 class HabitSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.email')
+
     class Meta:
         model = Habit
         fields = "__all__"

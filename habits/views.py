@@ -1,4 +1,5 @@
 from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
@@ -13,21 +14,52 @@ class HabitViewSet(ModelViewSet):
     queryset = Habit.objects.all()
     serializer_class = HabitSerializer
     pagination_class = HabitPagination
-    permission_classes = [
-        IsOwnerOrReadOnly,
-    ]
 
+    # permission_classes = [AllowAny,]
+    permission_classes = [IsOwnerOrReadOnly]
+    # permission_classes = [AllowAny, IsOwnerOrReadOnly,]
+
+    http_method_names = ['get', 'post', 'put', 'patch', 'delete', 'head', 'options']
+
+# habits/views.py — упрощённый get_queryset() для отладки
     def get_queryset(self):
-        user = self.request.user
-        if user.is_authenticated:
-            # Для CRUD-операций оставить доступ только к своим привычкам
-            return Habit.objects.filter(owner=user).order_by("habit_name")
-        else:
-            # Для неаутентифицированных — пустой набор (публичные привычки — через отдельный эндпоинт)
-            return Habit.objects.none()
+        # Временно убираем фильтрацию для диагностики
+        return Habit.objects.all()
 
     def perform_create(self, serializer):
+        print(f"[VIEW] perform_create вызван. Пользователь: {self.request.user}")
         serializer.save(owner=self.request.user)
+        print(f"[VIEW] Привычка сохранена. Владелец: {self.request.user}")
+
+    def create(self, request, *args, **kwargs):
+        print(f"[VIEW] Метод create вызван. action: {self.action}")
+        return super().create(request, *args, **kwargs)
+
+
+    # def get_queryset(self):
+    #     user = self.request.user
+    #     if user.is_authenticated:
+    #         if self.action == 'create':
+    #             # При создании не фильтруем — владелец будет назначен в perform_create
+    #             return Habit.objects.all()
+    #         else:
+    #             return Habit.objects.filter(owner=user).order_by("habit_name")
+    #     else:
+    #         return Habit.objects.none()
+    #
+    # def perform_create(self, serializer):
+    #     serializer.save(owner=self.request.user)
+
+    # def get_queryset(self):
+    #     user = self.request.user
+    #     if user.is_authenticated:
+    #         # Для CRUD-операций оставить доступ только к своим привычкам
+    #         return Habit.objects.filter(owner=user).order_by("habit_name")
+    #     else:
+    #         # Для неаутентифицированных — пустой набор (публичные привычки — через отдельный эндпоинт)
+    #         return Habit.objects.none()
+
+
 
     @action(detail=False, methods=["get"], permission_classes=[])
     def public_habits(self, request):
