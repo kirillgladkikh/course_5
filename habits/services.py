@@ -18,7 +18,7 @@ def calculate_reminder_time(habit, base_time=None):
     if base_time is None:
         base_time = timezone.now()
 
-    # Создаём datetime для напоминания сегодня (время привычки минус 15 минут)
+    # Создаём datetime для напоминания сегодня (время привычки минус 15 минут)
     reminder_datetime = timezone.make_aware(timezone.datetime.combine(base_time.date(), habit.time)) - timedelta(
         minutes=15
     )

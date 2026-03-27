@@ -46,7 +46,7 @@ class HabitCRUDTests(TestCase):
             'is_pleasant': False,
             'period': 1,
             'reward': 'Чашка кофе',
-            'time_to_action': 120,  # Передаем как число секунд (120 с = 2 мин)
+            'time_to_action': 120,  # Передаем как число секунд (120 с = 2 мин)
             'is_published': True,
         }
 
@@ -73,52 +73,6 @@ class HabitCRUDTests(TestCase):
         self.assertEqual(habit.habit_name, 'Утренняя зарядка')
         self.assertEqual(habit.owner, self.user)
 
-    # def test_create_habit_success(self):
-    #     """Тест успешного создания привычки"""
-    #     data = {
-    #         'habit_name': 'Утренняя зарядка',
-    #         'place': 'Дома',
-    #         'time': '08:00:00',
-    #         'action': 'Пробежать 1 км',
-    #         'is_pleasant': False,
-    #         'period': 1,
-    #         'reward': 'Чашка кофе',
-    #         'time_to_action': 120,  # Передаем как число секунд
-    #         'is_published': True,
-    #     }
-    #
-    #     print("Отправляем POST-запрос с данными:", data)
-    #     response = self.client.post('/habits/habits/', data, format='json')
-    #
-    #     print("Статус ответа:", response.status_code)
-    #     print("Тело ответа:", response.data)
-    #
-    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-    #     self.assertEqual(Habit.objects.count(), 1)
-    #     habit = Habit.objects.first()
-    #     self.assertEqual(habit.habit_name, 'Утренняя зарядка')
-    #     self.assertEqual(habit.owner, self.user)
-
-        # """Тест успешного создания привычки"""
-        # data = {
-        #     'habit_name': 'Утренняя зарядка',
-        #     'place': 'Дома',
-        #     'time': '08:00:00',
-        #     'action': 'Пробежать 1 км',
-        #     'is_pleasant': False,
-        #     'period': 1,
-        #     'reward': 'Чашка кофе',
-        #     'time_to_action': '00:02:00',  # 2 минуты
-        #     'is_published': True,
-        # }
-        #
-        # response = self.client.post('/habits/habits/', data, format='json')
-        #
-        # self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        # self.assertEqual(Habit.objects.count(), 1)
-        # habit = Habit.objects.first()
-        # self.assertEqual(habit.habit_name, 'Утренняя зарядка')
-        # self.assertEqual(habit.owner, self.user)
 
     def test_retrieve_habit_success(self):
         """Тест получения привычки"""
@@ -162,7 +116,7 @@ class HabitCRUDTests(TestCase):
         }
 
         response = self.client.patch(f'/habits/habits/{habit.id}/', update_data, format='json')
-        # response = self.client.put(f'/habits/habits/{habit.id}/', update_data, format='json')
+
         print(f"Статус ответа: {response.status_code}")
         print(f"Тело ошибки: {response.data}")  # Покажет проблемное поле
 
@@ -189,34 +143,19 @@ class HabitCRUDTests(TestCase):
         # Данные для обновления — должны содержать ВСЕ обязательные поля модели
         update_data = {
             'habit_name': 'Вечерняя пробежка',
-            # 'place': 'Парк',
-            # 'time': '19:00:00',
             'action': 'Пробежать 2 км',  # Обязательно!
-            # 'is_pleasant': False,
-            # 'period': 1,
-            # 'reward': 'Отдых',  # Обязательно!
-            # 'time_to_action': '00:03:00',  # Новый формат времени
-            # 'is_published': True,
+
         }
 
         response = self.client.patch(f'/habits/habits/{habit.id}/', update_data, format='json')
-        # response = self.client.put(f'/habits/habits/{habit.id}/', update_data, format='json')
+
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['habit_name'], 'Вечерняя пробежка')
-        # self.assertEqual(response.data['place'], 'Парк')
+
         self.assertEqual(response.data['action'], 'Пробежать 2 км')  # Проверка обновления
-        # self.assertEqual(response.data['reward'], 'Отдых')  # Проверка обновления
 
 
-
-        # patch_data = {'habit_name': 'Йога по утрам'}
-        #
-        # response = self.client.patch(f'/habits/habits/{habit.id}/', patch_data, format='json')
-        #
-        # self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # habit.refresh_from_db()
-        # self.assertEqual(habit.habit_name, 'Йога по утрам')
 
     def test_delete_habit_success(self):
         """Тест удаления привычки"""
@@ -313,21 +252,7 @@ class HabitCRUDTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['results']), 0)  # Пустой список
 
-        # self.client.force_authenticate(user=None)
-        #
-        # response = self.client.get('/habits/habits/')
-        #
-        # self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        # self.assertIn(
-        #     'detail',
-        #     response.data,
-        #     'Ответ должен содержать поле "detail" с описанием ошибки'
-        # )
-        # self.assertEqual(
-        #     response.data['detail'],
-        #     'Authentication credentials were not provided.',
-        #     'Сообщение об ошибке должно быть стандартным для DRF при отсутствии аутентификации'
-        # )
+
 
 
 # Тесты для валидаторов (habits/validators.py)
@@ -343,7 +268,7 @@ class HabitValidatorsTests(TestCase):
             pk=2
         )
 
-# +++
+
     def test_validate_no_reward_and_related_habit_success(self):
         """Тест валидатора: не заполнены одновременно вознаграждение и связанная привычка (успех)"""
         # Только вознаграждение
@@ -361,7 +286,7 @@ class HabitValidatorsTests(TestCase):
         result = validate_no_reward_and_related_habit(data)
         self.assertEqual(result, data)
 
-# +++
+
     def test_validate_no_reward_and_related_habit_failure(self):
         """Тест валидатора: ошибка при одновременном заполнении вознаграждения и связанной привычки"""
         data = {
@@ -372,7 +297,7 @@ class HabitValidatorsTests(TestCase):
         with self.assertRaises(ValidationError):
             validate_no_reward_and_related_habit(data)
 
-# +++
+
     def test_validate_time_to_action_max_120_seconds_success(self):
         """Тест валидатора: время выполнения не превышает 120 секунд (успех)"""
         from datetime import timedelta
@@ -392,7 +317,7 @@ class HabitValidatorsTests(TestCase):
         result = validate_time_to_action_max_120_seconds(data)
         self.assertEqual(result, data)
 
-# +++
+
     def test_validate_time_to_action_max_120_seconds_failure(self):
         """Тест валидатора: ошибка, если время выполнения превышает 120 секунд"""
         from datetime import timedelta
@@ -404,7 +329,7 @@ class HabitValidatorsTests(TestCase):
 
 
 
-# +++
+
     def test_validate_time_to_action_max_120_seconds_success(self):
         """Тест валидатора: успех для корректного времени выполнения"""
         from datetime import timedelta
@@ -416,7 +341,7 @@ class HabitValidatorsTests(TestCase):
         except ValidationError:
             self.fail("validate_time_to_action_max_120_seconds raised ValidationError unexpectedly!")
 
-# +++
+
     def test_validate_related_habit_is_pleasant_success(self):
         """Тест валидатора: связанная привычка — приятная (успех)"""
         data = {'related_habit': self.pleasant_habit}
@@ -430,7 +355,7 @@ class HabitValidatorsTests(TestCase):
 
 
 
-# +++
+
     def test_validate_related_habit_is_pleasant_failure(self):
         """Тест валидатора: ошибка, если связанная привычка не приятная"""
         unpleasant_habit = Mock(is_pleasant=False, pk=2)
@@ -440,7 +365,7 @@ class HabitValidatorsTests(TestCase):
             validate_related_habit_is_pleasant(data)
 
 
-# +++
+
     def test_validate_pleasant_habit_no_reward_or_related_success(self):
         """Тест валидатора: у приятной привычки нет вознаграждения или связанной привычки (успех)"""
         # Приятная привычка без дополнительных полей
@@ -455,7 +380,7 @@ class HabitValidatorsTests(TestCase):
 
 
 
-# +++
+
     def test_validate_pleasant_habit_no_reward_or_related_failure(self):
         """Тест валидатора: ошибка для приятной привычки с вознаграждением"""
         data = {
@@ -468,7 +393,7 @@ class HabitValidatorsTests(TestCase):
             validate_pleasant_habit_no_reward_or_related(data)
 
 
-# +++
+
     def test_validate_period_between_1_and_7_days_success(self):
         """Тест валидатора: период выполнения в диапазоне 1–7 дней (успех)"""
         for period in range(1, 8):  # 1, 2, 3, 4, 5, 6, 7
@@ -479,7 +404,7 @@ class HabitValidatorsTests(TestCase):
 
 
 
-# +++
+
     def test_validate_period_between_1_and_7_days_failure(self):
         """Тест валидатора: ошибка, если период вне диапазона 1–7 дней"""
         data = {'period': 8}
