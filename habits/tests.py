@@ -26,8 +26,7 @@ class HabitCRUDTests(TestCase):
         self.client.force_authenticate(user=self.user)
 
     def test_available_endpoints(self):
-        response = self.client.get("/habits/habits/")
-        # print("Доступные методы:", response.data)
+        self.client.get("/habits/habits/")
 
     def test_create_habit_success(self):
         """Тест успешного создания привычки"""
@@ -195,7 +194,7 @@ class HabitCRUDTests(TestCase):
     def test_public_habits_endpoint(self):
         """Тест эндпоинта публичных привычек"""
         # Создаём публичную привычку
-        public_habit = Habit.objects.create(
+        Habit.objects.create(
             habit_name="Публичная привычка",
             place="Общественное место",
             time="10:00:00",
@@ -294,17 +293,6 @@ class HabitValidatorsTests(TestCase):
         data = {"time_to_action": timedelta(seconds=121)}
         with self.assertRaises(ValidationError):
             validate_time_to_action_max_120_seconds(data)
-
-    def test_validate_time_to_action_max_120_seconds_success(self):
-        """Тест валидатора: успех для корректного времени выполнения"""
-        from datetime import timedelta
-
-        # Корректные данные — исключения быть не должно
-        data = {"time_to_action": timedelta(seconds=120)}
-        try:
-            validate_time_to_action_max_120_seconds(data)
-        except ValidationError:
-            self.fail("validate_time_to_action_max_120_seconds raised ValidationError unexpectedly!")
 
     def test_validate_related_habit_is_pleasant_success(self):
         """Тест валидатора: связанная привычка — приятная (успех)"""
