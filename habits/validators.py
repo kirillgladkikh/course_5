@@ -14,9 +14,9 @@ def validate_no_reward_and_related_habit(value):
     # Проверяем только если оба поля переданы в запросе
     if "reward" in value and "related_habit" in value:
         if reward is not None and related_habit is not None:
-            raise ValidationError({
-                "reward": "Одновременный выбор вознаграждения и связанной привычки не допускается."
-            })
+            raise ValidationError(
+                {"reward": "Одновременный выбор вознаграждения и связанной привычки не допускается."}
+            )
     return value
 
 
@@ -27,15 +27,11 @@ def validate_time_to_action_max_120_seconds(value):
     """
     time_to_action = value.get("time_to_action")
 
-
     # Проверяем только если поле передано в запросе
     if "time_to_action" in value and time_to_action is not None:
         if time_to_action > timedelta(seconds=120):
-            raise ValidationError({
-                "time_to_action": "Время выполнения не может превышать 120 секунд (2 минуты)."
-            })
+            raise ValidationError({"time_to_action": "Время выполнения не может превышать 120 секунд (2 минуты)."})
     return value
-
 
 
 def validate_related_habit_is_pleasant(value):
@@ -48,12 +44,10 @@ def validate_related_habit_is_pleasant(value):
     # Проверяем только если поле передано в запросе и оно не None
     if "related_habit" in value and related_habit is not None:
         if not related_habit.is_pleasant:
-            raise ValidationError({
-                "related_habit": "Связанные привычки могут быть только с признаком приятной привычки."
-            })
+            raise ValidationError(
+                {"related_habit": "Связанные привычки могут быть только с признаком приятной привычки."}
+            )
     return value
-
-
 
 
 def validate_pleasant_habit_no_reward_or_related(value):
@@ -73,11 +67,10 @@ def validate_pleasant_habit_no_reward_or_related(value):
         has_related = "related_habit" in value and related_habit is not None
 
         if has_reward or has_related:
-            raise ValidationError({
-                "is_pleasant": "У приятной привычки не может быть вознаграждения или связанной привычки."
-            })
+            raise ValidationError(
+                {"is_pleasant": "У приятной привычки не может быть вознаграждения или связанной привычки."}
+            )
     return value
-
 
 
 def validate_period_between_1_and_7_days(value):
@@ -90,8 +83,5 @@ def validate_period_between_1_and_7_days(value):
     # Проверяем только если поле передано в запросе и не None
     if "period" in value and period is not None:
         if not (1 <= period <= 7):
-            raise ValidationError({
-                "period": "Период выполнения должен быть от 1 до 7 дней включительно."
-            })
+            raise ValidationError({"period": "Период выполнения должен быть от 1 до 7 дней включительно."})
     return value
-

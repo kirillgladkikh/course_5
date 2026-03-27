@@ -1,7 +1,6 @@
 from rest_framework.permissions import SAFE_METHODS, BasePermission
 
 
-
 class IsOwnerOrReadOnly(BasePermission):
     """
     Разрешает доступ только владельцу привычки для операций записи.
@@ -14,13 +13,8 @@ class IsOwnerOrReadOnly(BasePermission):
         # Для операций записи (POST, PUT, PATCH, DELETE) проверяем, что пользователь — владелец
         return obj.owner == request.user
 
-
     def has_permission(self, request, view):
         # Разрешаем POST для аутентифицированных пользователей
-        if view.action == 'create':
+        if view.action == "create":
             return request.user and request.user.is_authenticated
         return True
-
-
-
-

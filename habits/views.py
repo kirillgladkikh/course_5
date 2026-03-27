@@ -14,17 +14,14 @@ class HabitViewSet(ModelViewSet):
     serializer_class = HabitSerializer
     pagination_class = HabitPagination
 
-
     permission_classes = [IsOwnerOrReadOnly]
 
-
-    http_method_names = ['get', 'post', 'put', 'patch', 'delete', 'head', 'options']
-
+    http_method_names = ["get", "post", "put", "patch", "delete", "head", "options"]
 
     def get_queryset(self):
         user = self.request.user
         if user.is_authenticated:
-            if self.action == 'create':
+            if self.action == "create":
                 # При создании не фильтруем — владелец будет назначен в perform_create
                 return Habit.objects.all()
             else:
@@ -35,20 +32,9 @@ class HabitViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
-
     def create(self, request, *args, **kwargs):
 
         return super().create(request, *args, **kwargs)
-
-
-
-
-
-
-
-
-
-
 
     @action(detail=False, methods=["get"], permission_classes=[])
     def public_habits(self, request):
