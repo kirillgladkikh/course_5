@@ -21,34 +21,44 @@ class HabitViewSet(ModelViewSet):
 
     http_method_names = ['get', 'post', 'put', 'patch', 'delete', 'head', 'options']
 
-# habits/views.py — упрощённый get_queryset() для отладки
+
     def get_queryset(self):
-        # Временно убираем фильтрацию для диагностики
-        return Habit.objects.all()
+        user = self.request.user
+        if user.is_authenticated:
+            if self.action == 'create':
+                # При создании не фильтруем — владелец будет назначен в perform_create
+                return Habit.objects.all()
+            else:
+                return Habit.objects.filter(owner=user).order_by("habit_name")
+        else:
+            return Habit.objects.none()
 
     def perform_create(self, serializer):
-        print(f"[VIEW] perform_create вызван. Пользователь: {self.request.user}")
         serializer.save(owner=self.request.user)
-        print(f"[VIEW] Привычка сохранена. Владелец: {self.request.user}")
+
+
+    # def perform_create(self, serializer):
+    #     # print(f"[VIEW] perform_create вызван. Пользователь: {self.request.user}")
+    #     serializer.save(owner=self.request.user)
+    #     # print(f"[VIEW] Привычка сохранена. Владелец: {self.request.user}")
 
     def create(self, request, *args, **kwargs):
-        print(f"[VIEW] Метод create вызван. action: {self.action}")
+        # print(f"[VIEW] Метод create вызван. action: {self.action}")
         return super().create(request, *args, **kwargs)
 
 
-    # def get_queryset(self):
-    #     user = self.request.user
-    #     if user.is_authenticated:
-    #         if self.action == 'create':
-    #             # При создании не фильтруем — владелец будет назначен в perform_create
-    #             return Habit.objects.all()
-    #         else:
-    #             return Habit.objects.filter(owner=user).order_by("habit_name")
-    #     else:
-    #         return Habit.objects.none()
-    #
-    # def perform_create(self, serializer):
-    #     serializer.save(owner=self.request.user)
+
+
+
+# # habits/views.py — упрощённый get_queryset() для отладки
+#     def get_queryset(self):
+#         # Временно убираем фильтрацию для диагностики
+#         return Habit.objects.all()
+
+
+
+
+
 
     # def get_queryset(self):
     #     user = self.request.user
