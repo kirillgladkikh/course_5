@@ -10,7 +10,7 @@ app = Celery("config")
 # Конфигурация Celery Beat
 app.conf.beat_schedule = {
     "block-inactive-users-daily": {
-        "task": "users.tasks.schedule_habit_reminders",
+        "task": "tasks.tasks.schedule_habit_reminders",
         "schedule": crontab(hour=1, minute=0),  # Ежедневно в 01:00
     },
 }
