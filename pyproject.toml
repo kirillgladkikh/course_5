@@ -5,7 +5,7 @@ description = ""
 authors = [
     {name = "Kirill Gladkikh",email = "k.gladkikh@mail.ru"}
 ]
-requires-python = "3.13.5"
+requires-python = ">=3.13.0,<3.14.0"
 dependencies = [
     "django (>=6.0.3,<7.0.0)",
     "dotenv (>=0.9.9,<0.10.0)",
