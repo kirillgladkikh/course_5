@@ -8,9 +8,9 @@ WORKDIR /app
 COPY pyproject.toml poetry.lock ./
 
 # Устанавливаем системные зависимости (для psycopg2 и других пакетов)
-RUN apt-get update && apt-get install -y \
-    gcc \
-    postgresql-dev \
+RUN apt-get update \
+    && apt-get install -y gcc libpq-dev \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Устанавливаем Poetry
