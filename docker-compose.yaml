@@ -1,4 +1,4 @@
-version: '3.8'
+#version: '3.8'
 
 services:
   db:
@@ -12,6 +12,8 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER} -d ${DATABASE_NAME}"]
       interval: 10s
@@ -28,6 +30,8 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    networks:
+      - app-network
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -50,16 +54,24 @@ services:
       - "8000:8000"
     env_file:
       - .env
+    networks:
+      - app-network
+    extra_hosts:
+      - "localhost:host-gateway"
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: [ "CMD", "python", "manage.py", "check", "--database", "default" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+#      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 3
 
   celery:
     build: .
@@ -69,6 +81,10 @@ services:
       - .:/app
     env_file:
       - .env
+    networks:
+      - app-network
+    extra_hosts:
+      - "localhost:host-gateway"
     depends_on:
       db:
         condition: service_healthy
@@ -83,7 +99,13 @@ services:
       - .:/app
     env_file:
       - .env
+    networks:
+      - app-network
+    extra_hosts:
+      - "localhost:host-gateway"
     depends_on:
+      backend:
+        condition: service_healthy  # ВАЖНО: первая и ключевая зависимость!
       db:
         condition: service_healthy
       redis:
@@ -96,3 +118,7 @@ volumes:
   redis_data:
   static_volume:
   media_volume:
+
+networks:
+  app-network:
+    driver: bridge
