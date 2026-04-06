@@ -67,16 +67,20 @@ class Migration(migrations.Migration):
                     "period",
                     models.PositiveIntegerField(
                         default=1,
-                        help_text=("Периодичность выполнения в днях (1 — ежедневно, 2 — через день, "
-                                   "7 — еженедельно и т.д.)"),
+                        help_text=(
+                            "Периодичность выполнения в днях (1 — ежедневно, 2 — через день, "
+                            "7 — еженедельно и т.д.)"
+                        ),
                         verbose_name="Период выполнения (в днях)",
                     ),
                 ),
                 (
                     "reward",
                     models.CharField(
-                        help_text=("Что вы получите за выполнение привычки (например, «Чашка кофе», «10 минут отдыха»,"
-                                   " «Эпизод сериала»)"),
+                        help_text=(
+                            "Что вы получите за выполнение привычки (например, «Чашка кофе», «10 минут отдыха»,"
+                            " «Эпизод сериала»)"
+                        ),
                         max_length=255,
                         verbose_name="Вознаграждение",
                     ),
@@ -85,8 +89,9 @@ class Migration(migrations.Migration):
                     "time_to_action",
                     models.DurationField(
                         default=datetime.timedelta(seconds=120),
-                        help_text=("Максимальное время, которое вы потратите на выполнение (не более 120 секунд "
-                                   "/ 2 минут)"),
+                        help_text=(
+                            "Максимальное время, которое вы потратите на выполнение (не более 120 секунд " "/ 2 минут)"
+                        ),
                         validators=[django.core.validators.MaxValueValidator(datetime.timedelta(seconds=120))],
                         verbose_name="Время на выполнение",
                     ),
@@ -114,8 +119,10 @@ class Migration(migrations.Migration):
                     "related_habit",
                     models.ForeignKey(
                         blank=True,
-                        help_text=("Выберите привычку (не обязательно), которая будет триггером для этой "
-                                   "(например, после «Чистка зубов» → «Медитация»)"),
+                        help_text=(
+                            "Выберите привычку (не обязательно), которая будет триггером для этой "
+                            "(например, после «Чистка зубов» → «Медитация»)"
+                        ),
                         null=True,
                         on_delete=django.db.models.deletion.SET_NULL,
                         to="habits.habit",
