@@ -91,6 +91,24 @@ services:
       redis:
         condition: service_healthy
 
+#  flower:
+#   container_name: flower
+#   build: .
+#   command: sh -c "celery -A conf.celery flower"
+#   restart: always
+#   links:
+#     - redis
+#   depends_on:
+#     - redis
+#   ports:
+#     - "5555:5555"
+#   env_file: ".env"
+#   environment:
+#     PG_DB_HOST: db
+#     broker_url: redis://localhost:6379/0
+#   volumes:
+#     - ./flower_data:/var/lib/flower
+
   celery-beat:
     build: .
     container_name: habits_celery_beat
