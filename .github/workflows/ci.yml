@@ -2,6 +2,9 @@ name: Django CI
 
 on: [push, pull_request]
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true  # Принудительно используем Node.js 24
+
 jobs:
   lint:
     runs-on: ubuntu-latest
