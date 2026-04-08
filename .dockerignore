@@ -19,6 +19,7 @@ __pycache__/
 *.log
 
 # База данных (если используется SQLite)
+test_db.sqlite3
 *.sqlite3
 *.sqlite
 
@@ -34,6 +35,9 @@ media/
 dist/
 build/
 *.egg
+
+.git
+.gitignore
 
 # Временные файлы
 .DS_Store

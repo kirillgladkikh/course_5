@@ -4,12 +4,7 @@ FROM python:3.13-slim
 # Устанавливаем рабочую директорию внутри контейнера
 WORKDIR /app
 
-
-# Копируем весь код проекта в контейнер (включая pyproject.toml)
-COPY . .
-
-# Копируем файлы зависимостей Poetry (если нужны отдельно)
-# COPY pyproject.toml poetry.lock ./  # эту строку можно убрать, т.к. всё уже скопировано
+# СТАЛО КАК В УРОКЕ - pip!
 
 # Устанавливаем системные зависимости (для psycopg2 и других пакетов)
 RUN apt-get update \
@@ -17,15 +12,38 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Устанавливаем Poetry
-RUN pip install --no-cache-dir poetry
+COPY requirements.txt ./
 
-# Устанавливаем зависимости проекта через Poetry
-RUN poetry config virtualenvs.create false \
-    && poetry install --no-root --no-interaction --no-ansi --only main
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
 
 # Создаём статические файлы и медиа‑директории
 RUN mkdir -p static media
+
+# # БЫЛО через poetry - ИЗБЫТОЧНО!
+#
+# # Копируем весь код проекта в контейнер (включая pyproject.toml)
+# COPY . .
+#
+# # Копируем файлы зависимостей Poetry (если нужны отдельно)
+# # COPY pyproject.toml poetry.lock ./  # эту строку можно убрать, т.к. всё уже скопировано
+#
+# # Устанавливаем системные зависимости (для psycopg2 и других пакетов)
+# RUN apt-get update \
+#     && apt-get install -y gcc libpq-dev \
+#     && apt-get clean \
+#     && rm -rf /var/lib/apt/lists/*
+#
+# # Устанавливаем Poetry
+# RUN pip install --no-cache-dir poetry
+#
+# # Устанавливаем зависимости проекта через Poetry
+# RUN poetry config virtualenvs.create false \
+#     && poetry install --no-root --no-interaction --no-ansi --only main
+#
+# # Создаём статические файлы и медиа‑директории
+# RUN mkdir -p static media
 
 # !!! В Dockerfile можно убрать секции с аргументом ENV.
 # При поднятии контейнера, файл .env попадет в него,
@@ -52,3 +70,6 @@ EXPOSE 8000
 # Предполагается, что наше приложение будет подниматься именно с использованием docker-compose.
 # # Команда по умолчанию.
 # CMD ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+# Для CI/CD
+CMD ["sh", "-c", "python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000"]
