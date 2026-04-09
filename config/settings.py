@@ -143,7 +143,7 @@ STATICFILES_DIRS = [BASE_DIR / "static"]  # Квадратные скобки о
 
 # задаёт путь к директории, где будут собираться (коллекционироваться) статические файлы
 # (CSS, JavaScript, изображения и т. д.) при выполнении команды python manage.py collectstatic
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(

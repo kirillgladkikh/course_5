@@ -1,17 +1,8 @@
 from datetime import timedelta
 
 from django.core.validators import MaxValueValidator
-from django.db.models import (
-    CASCADE,
-    SET_NULL,
-    BooleanField,
-    CharField,
-    DurationField,
-    ForeignKey,
-    Model,
-    PositiveIntegerField,
-    TimeField,
-)
+from django.db.models import (CASCADE, SET_NULL, BooleanField, CharField, DurationField, ForeignKey, Model,
+                              PositiveIntegerField, TimeField)
 
 from config.settings import AUTH_USER_MODEL
 
