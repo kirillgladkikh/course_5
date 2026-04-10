@@ -1,4 +1,5 @@
 import os
+# import sys
 from datetime import timedelta
 from pathlib import Path
 
@@ -28,7 +29,8 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"  # или DEBUG = True if os.getenv('DEBUG') == "True" else False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
+# ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -139,6 +141,10 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]  # Квадратные скобки обязательны, так как это список путей.
 
+# задаёт путь к директории, где будут собираться (коллекционироваться) статические файлы
+# (CSS, JavaScript, изображения и т. д.) при выполнении команды python manage.py collectstatic
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
 MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(
     BASE_DIR, "media"
@@ -231,3 +237,12 @@ if CACHE_ENABLED:
             "LOCATION": "redis://localhost:6379/1",
         }
     }
+
+# # Для легкого тестирования на внешнем сервере
+# if 'test' in sys.argv:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': BASE_DIR / 'test_db.sqlite3',
+#         }
+#     }

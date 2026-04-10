@@ -1,6 +1,13 @@
-#version: '3.8'
-
 services:
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - static_volume:/app/staticfiles
+
   db:
     image: postgres:15
     container_name: habits_db
@@ -20,6 +27,8 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
+    depends_on:
+      - nginx
 
   redis:
     image: redis:7-alpine
@@ -68,10 +77,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-#      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
-#      interval: 30s
-#      timeout: 10s
-#      retries: 3
 
   celery:
     build: .
