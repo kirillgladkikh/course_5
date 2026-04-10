@@ -77,10 +77,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-#      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
-#      interval: 30s
-#      timeout: 10s
-#      retries: 3
 
   celery:
     build: .
@@ -99,24 +95,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-
-#  flower:
-#   container_name: flower
-#   build: .
-#   command: sh -c "celery -A conf.celery flower"
-#   restart: always
-#   links:
-#     - redis
-#   depends_on:
-#     - redis
-#   ports:
-#     - "5555:5555"
-#   env_file: ".env"
-#   environment:
-#     PG_DB_HOST: db
-#     broker_url: redis://localhost:6379/0
-#   volumes:
-#     - ./flower_data:/var/lib/flower
 
   celery-beat:
     build: .

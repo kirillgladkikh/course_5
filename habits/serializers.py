@@ -1,13 +1,9 @@
 from rest_framework import serializers
 
 from habits.models import Habit
-from habits.validators import (
-    validate_no_reward_and_related_habit,
-    validate_period_between_1_and_7_days,
-    validate_pleasant_habit_no_reward_or_related,
-    validate_related_habit_is_pleasant,
-    validate_time_to_action_max_120_seconds,
-)
+from habits.validators import (validate_no_reward_and_related_habit, validate_period_between_1_and_7_days,
+                               validate_pleasant_habit_no_reward_or_related, validate_related_habit_is_pleasant,
+                               validate_time_to_action_max_120_seconds)
 
 
 class HabitSerializer(serializers.ModelSerializer):
