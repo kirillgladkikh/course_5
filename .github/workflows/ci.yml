@@ -73,57 +73,53 @@ jobs:
           ALLOWED_HOSTS: 'localhost,127.0.0.1,217.28.226'
         run: python manage.py test
 
-  deploy:
+  build:
     needs: test
-    runs-on: [self-hosted, prod]
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Fetch updates
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Log in in Docker hub
+        run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }} .
+
+      - name: Push Docker image to Docker hub
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Deploy to server
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+          SSH_USER: ${{ secrets.SSH_USER }}
         run: |
-          cd /home/test/course_5
-          git fetch
-          git switch main
-          git merge origin/main
-          docker compose up --build --force-recreate -d
-
-
-
-#  build:
-##    needs: test
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Check out code
-#        uses: actions/checkout@v3
-#
-#      - name: Log in in Docker hub
-#        run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
-#
-#      - name: Build Docker image
-#        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }} .
-#
-#      - name: Push Docker image to Docker hub
-#        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-#
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+            docker stop myapp || true
+            docker rm myapp || true
+            docker run -d --name myapp -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+          EOF
 
 #  deploy:
 #    needs: build
-#    runs-on: ubuntu-latest
+#    runs-on: [self-hosted, prod]
 #    steps:
-#      - name: Set up SSH
-#        uses: webfactory/ssh-agent@v0.9.0
-#        with:
-#          ssh-private-key: ${{ secrets.SSH_KEY }}
-#
-#      - name: Deploy to server
-#        env:
-#          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-#          SERVER_IP: ${{ secrets.SERVER_IP }}
-#          SSH_USER: ${{ secrets.SSH_USER }}
+#      - uses: actions/checkout@v4
+#      - name: Fetch updates
 #        run: |
-#          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-#            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-#            docker stop myapp || true
-#            docker rm myapp || true
-#            docker run -d --name myapp -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-#          EOF
-
+#          cd /home/test/course_5
+#          git fetch
+#          git switch main
+#          git merge origin/main
+#          docker compose up --build --force-recreate -d
