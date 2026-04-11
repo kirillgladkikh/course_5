@@ -5,110 +5,87 @@ on:
     branches: ["main"]
 
 env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true  # Принудительно используем Node.js 24
 
 jobs:
-  deploy:
-    runs-on: [self-hosted, prod]
+  lint:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Fetch updates
-        run: | 
-          cd /home/test/course_5
-          git fetch 
-          git switch main 
-          git merge origin/main 
-          docker compose up --build --force-recreate -d
+      - name: Check out code
+        uses: actions/checkout@v3
 
-#name: Django CI
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13.5'
+
+      - name: Install flake8
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8
+
+      - name: Run flake8
+        run: flake8 .
+
+#  test:
+#    needs: lint
+#    runs-on: ubuntu-latest
+#    services:
+#      postgres:
+#        image: postgres:15
+#        env:
+#          POSTGRES_DB: ${{ secrets.DATABASE_NAME }}
+#          POSTGRES_USER: ${{ secrets.DATABASE_USER }}
+#          POSTGRES_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+#        ports:
+#          - 5432:5432
+#        options: >-
+#          --health-cmd pg_isready
+#          --health-interval 10s
+#          --health-timeout 5s
+#          --health-retries 5
+#    steps:
+#      - name: Check out code
+#        uses: actions/checkout@v3
 #
-##on: [push, pull_request]
-#on:
-#  push:
-#  branches: ["main"]
+#      - name: Set up Python
+#        uses: actions/setup-python@v4
+#        with:
+#          python-version: '3.13.5'
 #
-#env:
-#  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true  # Принудительно используем Node.js 24
+#      - name: Install dependencies
+#        run: |
+#          python -m pip install --upgrade pip
+#          pip install -r requirements.txt
 #
-#jobs:
+#      - name: Run tests
+#        env:
+#          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+#          DEBUG: 'False'
+#          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+#          DATABASE_USER: ${{ secrets.DATABASE_USER }}
+#          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+#          DATABASE_HOST: localhost
+#          DATABASE_PORT: '5432'
+#          CELERY_BROKER_URL: ${{ secrets.CELERY_BROKER_URL }}
+#          CELERY_RESULT_BACKEND: ${{ secrets.CELERY_RESULT_BACKEND }}
+#          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+#          ALLOWED_HOSTS: 'localhost,127.0.0.1'
+#        run: python manage.py test
+
 #  deploy:
-#  runs-on: [ self-hosted, prod ]
-#  steps:
-#    - uses: actions/checkout@v4
-#    - name: Fetch updates
-#      run: |
-#        cd /home/test/course_5
-#        git fetch
-#        git switch main
-#        git merge origin/main
-#        docker compose up --build --force-recreate -d
+#    needs: test
+#    runs-on: [self-hosted, prod]
+#    steps:
+#      - uses: actions/checkout@v4
+#      - name: Fetch updates
+#        run: |
+#          cd /home/test/course_5
+#          git fetch
+#          git switch main
+#          git merge origin/main
+#          docker compose up --build --force-recreate -d
 
-#jobs:
-##  lint:
-##    runs-on: ubuntu-latest
-##    steps:
-##      - name: Check out code
-##        uses: actions/checkout@v3
-##
-##      - name: Set up Python
-##        uses: actions/setup-python@v4
-##        with:
-##          python-version: '3.13.5'
-##
-##      - name: Install flake8
-##        run: |
-##          python -m pip install --upgrade pip
-##          pip install flake8
-##
-##      - name: Run flake8
-##        run: flake8 .
-#
-##  test:
-##    needs: lint
-##    runs-on: ubuntu-latest
-##    services:
-##      postgres:
-##        image: postgres:15
-##        env:
-##          POSTGRES_DB: ${{ secrets.DATABASE_NAME }}
-##          POSTGRES_USER: ${{ secrets.DATABASE_USER }}
-##          POSTGRES_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-##        ports:
-##          - 5432:5432
-##        options: >-
-##          --health-cmd pg_isready
-##          --health-interval 10s
-##          --health-timeout 5s
-##          --health-retries 5
-##    steps:
-##      - name: Check out code
-##        uses: actions/checkout@v3
-##
-##      - name: Set up Python
-##        uses: actions/setup-python@v4
-##        with:
-##          python-version: '3.13.5'
-##
-##      - name: Install dependencies
-##        run: |
-##          python -m pip install --upgrade pip
-##          pip install -r requirements.txt
-##
-##      - name: Run tests
-##        env:
-##          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-##          DEBUG: 'False'
-##          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
-##          DATABASE_USER: ${{ secrets.DATABASE_USER }}
-##          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-##          DATABASE_HOST: localhost
-##          DATABASE_PORT: '5432'
-##          CELERY_BROKER_URL: ${{ secrets.CELERY_BROKER_URL }}
-##          CELERY_RESULT_BACKEND: ${{ secrets.CELERY_RESULT_BACKEND }}
-##          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-##          ALLOWED_HOSTS: 'localhost,127.0.0.1'
-##        run: python manage.py test
-#
 #  build:
 ##    needs: test
 #    runs-on: ubuntu-latest
@@ -125,6 +102,7 @@ jobs:
 #      - name: Push Docker image to Docker hub
 #        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
 #
+
 #  deploy:
 #    needs: build
 #    runs-on: ubuntu-latest
@@ -146,3 +124,4 @@ jobs:
 #            docker rm myapp || true
 #            docker run -d --name myapp -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
 #          EOF
+
