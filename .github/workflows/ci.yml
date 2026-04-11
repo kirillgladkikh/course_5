@@ -73,18 +73,18 @@ jobs:
           ALLOWED_HOSTS: 'localhost,127.0.0.1'
         run: python manage.py test
 
-#  deploy:
-#    needs: test
-#    runs-on: [self-hosted, prod]
-#    steps:
-#      - uses: actions/checkout@v4
-#      - name: Fetch updates
-#        run: |
-#          cd /home/test/course_5
-#          git fetch
-#          git switch main
-#          git merge origin/main
-#          docker compose up --build --force-recreate -d
+  deploy:
+    needs: test
+    runs-on: [self-hosted, prod]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch updates
+        run: |
+          cd /home/test/course_5
+          git fetch
+          git switch main
+          git merge origin/main
+          docker compose up --build --force-recreate -d
 
 
 
