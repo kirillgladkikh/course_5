@@ -70,7 +70,7 @@ jobs:
           CELERY_BROKER_URL: ${{ secrets.CELERY_BROKER_URL }}
           CELERY_RESULT_BACKEND: ${{ secrets.CELERY_RESULT_BACKEND }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          ALLOWED_HOSTS: 'localhost,127.0.0.1,217.28.226'
+          ALLOWED_HOSTS: 'localhost,127.0.0.1,217.28.226.26'
         run: python manage.py test
 
   build:
@@ -90,36 +90,28 @@ jobs:
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
 
   deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-#      - name: Set up SSH
-#        uses: webfactory/ssh-agent@v0.9.0
-#        with:
-#          ssh-private-key: ${{ secrets.SSH_KEY }}
+      needs: build
+      runs-on: ubuntu-latest
+      steps:
+        - name: Set up SSH
+          uses: webfactory/ssh-agent@v0.9.0
+          with:
+            ssh-private-key: ${{ secrets.SSH_KEY }}
 
-      - name: Deploy to server
-        env:
-          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-          SERVER_IP: ${{ secrets.SERVER_IP }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-            docker stop myapp || true
-            docker rm myapp || true
-            docker run -d --name myapp -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-          EOF
+        - name: Add server to known_hosts
+          run: |
+            mkdir -p ~/.ssh
+            ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
-#  deploy:
-#    needs: build
-#    runs-on: [self-hosted, prod]
-#    steps:
-#      - uses: actions/checkout@v4
-#      - name: Fetch updates
-#        run: |
-#          cd /home/test/course_5
-#          git fetch
-#          git switch main
-#          git merge origin/main
-#          docker compose up --build --force-recreate -d
+        - name: Deploy to server
+          env:
+            DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+            SERVER_IP: ${{ secrets.SERVER_IP }}
+            SSH_USER: ${{ secrets.SSH_USER }}
+          run: |
+            ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+              docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+              docker stop myapp || true
+              docker rm myapp || true
+              docker run -d --name myapp -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+            EOF

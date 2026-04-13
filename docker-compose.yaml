@@ -110,7 +110,7 @@ services:
       - "localhost:host-gateway"
     depends_on:
       backend:
-        condition: service_healthy  # ВАЖНО: первая и ключевая зависимость!
+        condition: service_healthy
       db:
         condition: service_healthy
       redis:
