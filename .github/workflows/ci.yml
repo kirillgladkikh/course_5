@@ -70,7 +70,7 @@ jobs:
           CELERY_BROKER_URL: ${{ secrets.CELERY_BROKER_URL }}
           CELERY_RESULT_BACKEND: ${{ secrets.CELERY_RESULT_BACKEND }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          ALLOWED_HOSTS: 'localhost,127.0.0.1,217.28.226'
+          ALLOWED_HOSTS: 'localhost,127.0.0.1,217.28.226.26'
         run: python manage.py test
 
   build:
@@ -116,7 +116,6 @@ jobs:
             DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
             CELERY_BROKER_URL: ${{ secrets.CELERY_BROKER_URL }}
             CELERY_RESULT_BACKEND: ${{ secrets.CELERY_RESULT_BACKEND }}
-#            TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           run: |
             ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
               docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
@@ -133,7 +132,6 @@ jobs:
                 -e DATABASE_PORT='${{ secrets.DATABASE_PORT }}' \
                 -e CELERY_BROKER_URL='${{ secrets.CELERY_BROKER_URL }}' \
                 -e CELERY_RESULT_BACKEND='${{ secrets.CELERY_RESULT_BACKEND }}' \
-#                -e TELEGRAM_TOKEN='${{ secrets.TELEGRAM_TOKEN }}' \
                 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
             EOF
 
