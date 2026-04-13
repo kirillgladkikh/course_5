@@ -4,8 +4,6 @@ FROM python:3.13-slim
 # Устанавливаем рабочую директорию внутри контейнера
 WORKDIR /app
 
-# КАК В УРОКЕ - pip!
-
 # Устанавливаем системные зависимости (для psycopg2 и других пакетов)
 RUN apt-get update \
     && apt-get install -y gcc libpq-dev \
